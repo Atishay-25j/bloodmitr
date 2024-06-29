@@ -1,14 +1,15 @@
 import React from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
+import logo from './bloodmitr.png'
 function Navbar() {
     return (
         <div>
             <nav className="navbar navbar-expand-lg fixed-top ">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="/home"
-                    ><img src="images/bloodmitr.png" alt="" width="150px" height="55px"
-                        /></a>
+                    <Link className="navbar-brand" to="/"
+                    ><img src={logo} alt="" width="150px" height="55px"
+                        /></Link>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -30,7 +31,7 @@ function Navbar() {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/" className="nav-link navITEM">
+                                <Link to="/donate" className="nav-link navITEM">
                                     DONATE
                                 </Link>
                             </li>
