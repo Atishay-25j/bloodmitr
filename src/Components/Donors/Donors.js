@@ -1,7 +1,88 @@
-import React from "react";
+import React,{useState ,useEffect} from "react";
 import video from './rcbmove2.mp4'
 import './Donors.css'
+
+window.onload = function () {
+
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("donationdate")[0].setAttribute('min', today);
+
+    var date = new Date();
+    var next_date = new Date(date.setDate(date.getDate() + 30));
+    var IncrementedDate = next_date.toISOString().slice(0, 10);
+
+    document.getElementsByName("donationdate")[0].setAttribute('max', IncrementedDate);
+
+}
 function Donors() {
+    const [prev ,setPrev] = useState(false);
+    const [prevInf ,setPrevInf] = useState(false);
+    const [prev6Mon , setPrev6Mon] = useState(false);
+    const [checkPrev6 , setcheckPrev6] = useState(0);
+
+    const [prevDies , setPrevDies] = useState(false);
+    const [checkPrevDies , setCheckPrevDies] = useState(0);
+    const handlePrevDies = (event)=>{
+        var check = event.target.checked;
+        if(check === true){
+            setCheckPrevDies(checkPrevDies+1);
+        }
+        else{
+            setCheckPrevDies(checkPrevDies-1);
+        }
+        if(checkPrevDies > 0){
+            setPrevDies(true);
+        }
+        else{
+            setPrevDies(false);
+        }
+    }
+    const handlePrev6 = (event)=>{
+        var checked = event.target.checked;
+        if(checked === true){
+            setcheckPrev6(checkPrev6 + 1);
+            console.log(checked);
+        }
+        else{
+            setcheckPrev6(checkPrev6 - 1);
+        }
+        if(checkPrev6>0){
+            setPrev6Mon(true);
+        }
+        else{
+            setPrev6Mon(false);
+        }
+        
+    }
+    const handlePrev = (event)=>{
+        if (event.target.value === "yes") {
+            setPrev(true);
+            console.log(prev);
+        }
+        else{
+            setPrev(false);
+            console.log(prev);
+        }
+        
+    }
+    useEffect(() => {
+        // console.log(prev);
+        // console.log(prevInf);
+        console.log(prevDies);
+        console.log(checkPrevDies);
+    }, [prev,prevInf,prev6Mon,checkPrev6 ,prevDies, checkPrevDies]);
+    
+    const handleInfec = (event)=>{
+        if (event.target.value === "yes") {
+            // console.log(prevInf);
+            setPrevInf(true);
+            // console.log(prevInf);
+        }
+        else{
+            setPrevInf(false);
+            console.log(prevInf);
+        }
+    }
     return (
         <div>
             <video autoPlay loop muted play-inline= {"true".toString()} className="backvid">
@@ -131,8 +212,8 @@ function Donors() {
                         <h4>🩸 Have you donated blood in last 3 months ?</h4>
                         <br />
                         <div className="check-label">
-                            <label><input type="radio" name="previously" onChange="prev()" required />Yes</label>
-                            <label><input type="radio" name="previously" onChange="prev()" />No</label>
+                            <label><input type="radio" name="previously" value="yes" onChange={handlePrev}required />Yes</label>
+                            <label><input type="radio" name="previously" value= "no" onChange={handlePrev} />No</label>
                         </div>
                         <br />
                         <br />
@@ -142,8 +223,8 @@ function Donors() {
                             and/or Venereal Disease ? </h4>
                         <br />
                         <div className="check-label">
-                            <label><input type="radio" name="infected" onChange="infec()" required />Yes</label>
-                            <label><input type="radio" name="infected" onChange="infec()" />No</label>
+                            <label><input type="radio" name="infected" onChange={handleInfec} value="yes" required />Yes</label>
+                            <label><input type="radio" name="infected" onChange={handleInfec} value="no" />No</label>
                         </div>
                         <br />
                         <br />
@@ -151,13 +232,13 @@ function Donors() {
                         <h4>🩸 In the last 6 Months have you had any history of the following: </h4>
                         <div className="check-label">
                             <br />
-                            <label><input type="checkbox" id="wtLoss" />Unexplained Weight Loss</label>
+                            <label><input type="checkbox" id="wtLoss" onChange={handlePrev6} />Unexplained Weight Loss</label>
                             <br />
-                            <label><input type="checkbox" id="reDi" />Repeared Diarrhoea</label>
+                            <label><input type="checkbox" id="reDi" onChange={handlePrev6}/>Repeared Diarrhoea</label>
                             <br />
-                            <label><input type="checkbox" id="swGl" />Swollen Glands</label>
+                            <label><input type="checkbox" id="swGl" onChange={handlePrev6}/>Swollen Glands</label>
                             <br />
-                            <label><input type="checkbox" id="fev" />Continuous Low-Grade Fever</label>
+                            <label><input type="checkbox" id="fev" onChange={handlePrev6}/>Continuous Low-Grade Fever</label>
                         </div>
                         <br />
 
@@ -166,11 +247,11 @@ function Donors() {
                         <h4>🩸 In the last 6 Months have you had any :-</h4>
                         <div className="check-label">
                             <br />
-                            <label><input type="checkbox" id="tatto" /> Tattooing</label>
+                            <label><input type="checkbox" id="tatto" onChange={handlePrev6}/> Tattooing</label>
                             <br />
-                            <label><input type="checkbox" id="erPi" /> Ear Piercing </label>
+                            <label><input type="checkbox" id="erPi" onChange={handlePrev6}/> Ear Piercing </label>
                             <br />
-                            <label><input type="checkbox" id="deEx" /> Dental Extraction</label>
+                            <label><input type="checkbox" id="deEx" onChange={handlePrev6}/> Dental Extraction</label>
                             <br />
                         </div>
 
@@ -179,35 +260,35 @@ function Donors() {
                             <br />
                             <div className="checkAlign">
 
-                                <label><input type="checkbox" id="heDi" />Heart Diseas</label>
+                                <label><input type="checkbox" id="heDi" onChange={handlePrevDies}/>Heart Diseas</label>
 
-                                <label><input type="checkbox" id="luDi" /> Lung Disease </label>
+                                <label><input type="checkbox" id="luDi" onChange={handlePrevDies}/> Lung Disease </label>
 
-                                <label><input type="checkbox" id="kiDi" /> Kidney Disease</label>
+                                <label><input type="checkbox" id="kiDi" onChange={handlePrevDies}/> Kidney Disease</label>
 
-                                <label><input type="checkbox" id="caDi" /> Cancer/ Malignant Disease </label>
+                                <label><input type="checkbox" id="caDi" onChange={handlePrevDies}/> Cancer/ Malignant Disease </label>
 
-                                <label><input type="checkbox" id="eiDi" /> Epilepsy</label>
+                                <label><input type="checkbox" id="eiDi" onChange={handlePrevDies}/> Epilepsy</label>
 
-                                <label><input type="checkbox" id="diDi" /> Diabetes</label>
+                                <label><input type="checkbox" id="diDi" onChange={handlePrevDies}/> Diabetes</label>
 
-                                <label><input type="checkbox" id="tuDi" /> Tuberculosis</label>
+                                <label><input type="checkbox" id="tuDi" onChange={handlePrevDies}/> Tuberculosis</label>
 
-                                <label><input type="checkbox" id="abDi" /> Abnormal bleeding tendency</label>
+                                <label><input type="checkbox" id="abDi" onChange={handlePrevDies}/> Abnormal bleeding tendency</label>
 
-                                <label><input type="checkbox" id="hepDi" /> Hepatitis B/C</label>
+                                <label><input type="checkbox" id="hepDi" onChange={handlePrevDies}/> Hepatitis B/C</label>
 
-                                <label><input type="checkbox" id="alDi" /> Allergic Disease</label>
+                                <label><input type="checkbox" id="alDi" onChange={handlePrevDies}/> Allergic Disease</label>
 
-                                <label><input type="checkbox" id="jaDi" /> Jaundice</label>
+                                <label><input type="checkbox" id="jaDi" onChange={handlePrevDies}/> Jaundice</label>
 
-                                <label><input type="checkbox" id="seDi" /> Sexually Trans. Disease </label>
+                                <label><input type="checkbox" id="seDi" onChange={handlePrevDies}/> Sexually Trans. Disease </label>
 
-                                <label><input type="checkbox" id="maDi" /> Malaria</label>
+                                <label><input type="checkbox" id="maDi" onChange={handlePrevDies}/> Malaria</label>
 
-                                <label><input type="checkbox" id="tyDi" /> Typhoid (Last 1 yr.) </label>
+                                <label><input type="checkbox" id="tyDi" onChange={handlePrevDies}/> Typhoid (Last 1 yr.) </label>
 
-                                <label><input type="checkbox" id="faDi" /> Fainting Spells</label>
+                                <label><input type="checkbox" id="faDi" onChange={handlePrevDies}/> Fainting Spells</label>
 
                             </div>
                         </div>
@@ -218,11 +299,11 @@ function Donors() {
                         <h4>🩸 Is There any history of surgery or Blood Transfusion in the past 6 Months? :- </h4>
                         <div className="check-label">
                             <br />
-                            <label><input type="checkbox" id="maSur" /> Major Surgery</label>
+                            <label><input type="checkbox" id="maSur" onChange={handlePrev6} /> Major Surgery</label>
                             <br />
-                            <label><input type="checkbox" id="blTrans" />Blood Transfusion </label>
+                            <label><input type="checkbox" id="blTrans" onChange={handlePrev6}/>Blood Transfusion </label>
                             <br />
-                            <label><input type="checkbox" id="miSur" /> Minor Surgery</label>
+                            <label><input type="checkbox" id="miSur" onChange={handlePrev6}/> Minor Surgery</label>
                             <br />
                         </div>
                         <div className="btn">
