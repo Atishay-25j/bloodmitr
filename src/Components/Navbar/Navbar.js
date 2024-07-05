@@ -36,7 +36,7 @@ function Navbar() {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/" className="nav-link navITEM">
+                                <Link to="/require" className="nav-link navITEM">
                                     FIND A DONOR
                                 </Link>
                             </li>
@@ -58,7 +58,7 @@ function Navbar() {
                                 >REQUESTS</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link navITEM" to="/logout">LOGIN</Link>
+                                <Link className="nav-link navITEM" to="/login">LOGIN</Link>
                             </li>
                         </ul>
                     </div>
