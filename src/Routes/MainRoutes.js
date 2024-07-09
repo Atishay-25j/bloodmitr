@@ -6,18 +6,23 @@ import Donate from "../Pages/Donate";
 import LoginPage from "../Pages/Login";
 import SignUpPage from "../Pages/Signup";
 import Recipient from "../Pages/Recipient";
+import Data from "../Pages/Data";
 function MainRoutes() {
     return (
-        <Router>
+        <>
+            <Router>
             <Routes>
-            <Route  path="/" element={<Home/>} />
-            <Route path="/donate" element = {<Donate/>} />
-            <Route path="/login" element={<LoginPage/>} />
-            <Route path="/signup" element={<SignUpPage/>} />
-            <Route path="/require" element={<Recipient/>} />
+            <Route  exact path="/" element={<Home/>} />
+            <Route  exact path="/donate" element = {<Donate/>} />
+            <Route  exact path="/login" element={<LoginPage/>} />
+            <Route  exact path="/signup" element={<SignUpPage/>} />
+            <Route  exact path="/require" element={<Recipient/>} />
+            <Route  exact path="/explore" element ={<Data/>} />
             </Routes>
             
         </Router>
+        </>
+        
     )
 }
 

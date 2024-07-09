@@ -41,8 +41,8 @@ function Navbar() {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/" className="nav-link navITEM">
-                                    SPRED AWARENESS
+                                <Link to="/explore" className="nav-link navITEM">
+                                    EXPLORE
                                 </Link>
                             </li>
                             <li className="nav-item">

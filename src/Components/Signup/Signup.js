@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom"
 
 function Copyright(props) {
   return (
@@ -31,14 +32,42 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Signin() {
-    const [disable ,setDisable] = React.useState(true);
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const [disable, setDisable] = React.useState(true);
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
+      name: data.get('firstName'),
       email: data.get('email'),
       password: data.get('password'),
+      token : process.env.REACT_APP_LINK
     });
+    const name = data.get('firstName');
+    const email = data.get('email');
+    const password = data.get('password');
+    
+    const response = await fetch(`${process.env.REACT_APP_LINK}/api/auth/createUser`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password })
+    });
+    // eslint-disable-next-line
+    const json = await response.json();
+    console.log(json);
+    if (json) {
+      console.log((json.authToken));
+      localStorage.setItem('token', json.authToken)
+      console.log('b4');
+      navigate("/");
+      console.log('after');
+      // props.showAlert("Account created successfully", "success")
+    }
+    else {
+      // props.showAlert("Email already exists", "danger")
+    }
   };
 
   return (
@@ -107,7 +136,7 @@ export default function Signin() {
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I Confirm above details are valid to the best of my knowledge."
-                  onChange={(event) =>{setDisable(disable==true?false:true)}}
+                  onChange={(event) => { setDisable(disable === true ? false : true) }}
                 />
               </Grid>
             </Grid>
@@ -116,14 +145,14 @@ export default function Signin() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={disable=== true?true:false}
+              disabled={disable === true ? true : false}
             >
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2" style={{'cursor' : 'pointer'}}>
-                Have an account? Sign In
+                <Link href="/login" variant="body2" style={{ 'cursor': 'pointer' }}>
+                  Have an account? Sign In
                 </Link>
               </Grid>
             </Grid>
