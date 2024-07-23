@@ -60,9 +60,7 @@ export default function Signin() {
     if (json) {
       console.log((json.authToken));
       localStorage.setItem('token', json.authToken)
-      console.log('b4');
       navigate("/");
-      console.log('after');
       // props.showAlert("Account created successfully", "success")
     }
     else {

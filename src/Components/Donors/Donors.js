@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import video from './rcbmove2.mp4'
 
 import './Donors.css'
 import citiesData from '../../Assets/cities.json'
 import styled, { createGlobalStyle } from 'styled-components';
+import contextValue from '../../context/donors/donorContext'
 const GlobalStyle = createGlobalStyle`
   body {
     min-height: 100vh;
@@ -14,35 +15,67 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 function Donors() {
+    const context = useContext(contextValue);
+    const {addDonor} = context;
+    const handleSubmit = async (event)=>{
+        event.preventDefault();
+        // console.log({
+        //     name : name,
+        //     age : age,
+        //     email : email,
+        //     mobile : phone,
+        //     address : address,
+        //     gender : gender,
+        //     blood : blood,
+        //     date : date,
+        //     state : selectedState,
+        //     city : selectedCity,
+        //     prevDon : prev,
+        //     prevInf : prevInf,
+        //     prev6 : checkPrev6,
+        //     prevDis : checkPrevDies
+        // });
+        addDonor(name,age,email,phone,address,gender, blood,date,selectedState,selectedCity);
+        
+    }
+
     const [prev, setPrev] = useState(false);
     const [prevInf, setPrevInf] = useState(false);
-    const [prev6Mon, setPrev6Mon] = useState(false);
     const [checkPrev6, setcheckPrev6] = useState(0);
 
-    const [prevDies, setPrevDies] = useState(false);
     const [checkPrevDies, setCheckPrevDies] = useState(0);
     
     // var today = new Date().toISOString().split('T')[0];
     const [date,setDate] = useState(Date);
+    const [name, setName] = useState("");
+    const [age ,setAge] = useState();
+    const [email,setEmail] = useState("");
+    const [phone , setPhone] = useState();
+    const [address, setAddress] = useState("");
+    const [gender , setGender] = useState("");
+    const [blood ,setBlood] = useState();
     // date[0].setAttribute('min', today);
     const handleDate = (event)=>{
         setDate(event.target.value)
         console.log(event.target.value);
     }
-    const handlePrevDies = (event) => {
-        var check = event.target.checked;
+    const handlePrevDies = async (event) => {
+        var check = await event.target.checked;
+        console.log({check :check});
         if (check === true) {
             setCheckPrevDies(checkPrevDies + 1);
+            console.log(checkPrevDies);
         }
         else {
             setCheckPrevDies(checkPrevDies - 1);
+            console.log(checkPrevDies);
         }
-        if (checkPrevDies > 0) {
-            setPrevDies(true);
-        }
-        else {
-            setPrevDies(false);
-        }
+        // if (checkPrevDies > 0) {
+        //     setPrevDies(true);
+        // }
+        // else {
+        //     setPrevDies(false);
+        // }
     }
     const handlePrev6 = (event) => {
         var checked = event.target.checked;
@@ -53,12 +86,12 @@ function Donors() {
         else {
             setcheckPrev6(checkPrev6 - 1);
         }
-        if (checkPrev6 > 0) {
-            setPrev6Mon(true);
-        }
-        else {
-            setPrev6Mon(false);
-        }
+        // if (checkPrev6 > 0) {
+        //     setPrev6Mon(true);
+        // }
+        // else {
+        //     setPrev6Mon(false);
+        // }
 
     }
     const handlePrev = (event) => {
@@ -72,24 +105,25 @@ function Donors() {
         }
 
     }
-    // useEffect(() => {
-    //     // console.log(prev);
-    //     // console.log(prevInf);
-    //     console.log(prevDies);
-    //     console.log(checkPrevDies);
-    // }, [prev, prevInf, prev6Mon, checkPrev6, prevDies, checkPrevDies]);
     const [states, setStates] = useState([]);
     const [cities, setCities] = useState([]);
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
 
+
     useEffect(() => {
-        console.log("Hel");
-        // console.log(citiesData);
+        
         const states = citiesData.states.map(data => data.state)
-        console.log(states);
         setStates(states);
-    }, []);
+        console.log({ 
+            prev : prev,
+            prevInf : prevInf,
+            prev6Check : checkPrev6,
+            prevdisCh : checkPrevDies
+        });
+        
+
+    }, [prev, prevInf , checkPrev6 ,checkPrevDies]);
 
     const handleInfec = (event) => {
         if (event.target.value === "yes") {
@@ -105,17 +139,16 @@ function Donors() {
     const handleStateChange = (event) => {
         const selectedState = event.target.value;
         setSelectedState(selectedState);
-        console.log(selectedState);
         const stateData = citiesData.states.find(state => state.state === selectedState);
-        console.log(stateData);
         setCities(stateData ? stateData.cities : []);
         setSelectedCity(''); // Reset city selection when state changes
     };
 
     const handleCityChange = (event) => {
         setSelectedCity(event.target.value);
-        console.log(event.target.value);
     };
+    
+    
     return (
         <div>
         <GlobalStyle/>
@@ -125,37 +158,37 @@ function Donors() {
             <div className="container" style={{ "margin": "100px" }}>
                 <h1>Blood Donation Form</h1>
                 <header>Enter Personal Details</header>
-                <form action="/donate" /*onSubmit={validatedonar()}*/ method="post">
+                <form action="/donate" onSubmit={handleSubmit} method="post">
                     <div className="details personal">
                         <span className="title"> Donor's Detail </span>
                         <div className="fields">
                             <div className="input-field">
                                 <label>Full Name</label>
                                 <input type="text" placeholder="Enter your name" title="Enter full name"
-                                    pattern="^(\w\w+)\s(\w+)$" name="name" required />
+                                    pattern="^(\w\w+)\s(\w+)$" name="name" value={name} onChange={(event)=>{setName(event.target.value)}}required />
                             </div>
                             <div className="input-field">
                                 <label>Age</label>
-                                <input type="text" placeholder="Enter your age" id="age" name="age" pattern="[0-9]{1,3}"
+                                <input type="text" placeholder="Enter your age" id="age" name="age" value={age} onChange={(event)=>{setAge(event.target.value)}} pattern="[0-9]{1,3}"
                                     required />
                             </div>
                             <div className="input-field">
                                 <label>Email</label>
-                                <input type="text" placeholder="Enter Email" name="email" required />
+                                <input type="text" placeholder="Enter Email" name="email" value={email} onChange={(event)=>{setEmail(event.target.value)}} required  />
                             </div>
 
                             <div className="input-field">
                                 <label>Mobile Number</label>
                                 <input type="tel" placeholder="Enter your mobile number" title="Enter 10 digit phone number"
-                                    pattern="[0-9]{10}" name="mobilenum" required />
+                                    pattern="[0-9]{10}" name="mobilenum" value={phone} onChange={(event)=>{setPhone(event.target.value)}} required />
                             </div>
                             <div className="input-field">
                                 <label>Address</label>
-                                <input type="text" placeholder="Enter your Address" name="address" required />
+                                <input type="text" placeholder="Enter your Address" name="address" value={address} onChange={(event)=>{setAddress(event.target.value)}}required />
                             </div>
                             <div className="input-field">
                                 <label>Gender</label>
-                                <input type="text" placeholder="Enter your Gender" name="gender" required />
+                                <input type="text" placeholder="Enter your Gender" name="gender" value={gender} onChange={(event)=>{setGender(event.target.value)}}required />
                             </div>
                             <div className="input-field">
                                 <label>Occupation</label>
@@ -171,7 +204,7 @@ function Donors() {
                             </div>
                             <div className="input-field">
                                 <label for="blood-group">Blood Group:</label>
-                                <select id="blood-group" name="bloodgroup" required>
+                                <select id="blood-group" name="bloodgroup" onChange={(event)=>{setBlood(event.target.value)}}required>
                                     <option value="">Select Blood Group</option>
                                     <option value="A+">A+</option>
                                     <option value="A-">A-</option>
@@ -224,7 +257,7 @@ function Donors() {
 
                         <h4>🩸 Have you donated blood in last 3 months ?</h4>
                         <br />
-                        <div className="check-label">
+                        <div className="check-label" >
                             <label><input type="radio" name="previously" value="yes" onChange={handlePrev} required />Yes</label>
                             <label><input type="radio" name="previously" value="no" onChange={handlePrev} />No</label>
                         </div>
@@ -320,7 +353,7 @@ function Donors() {
                             <br />
                         </div>
                         <div className="btn">
-                            <input type="submit" value="Ready to donate" id="sbtn" />
+                            <input type="submit"  value="Ready to donate" id="sbtn" />
                         </div>
                     </div>
                 </form>

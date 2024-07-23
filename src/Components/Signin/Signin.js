@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -31,14 +32,35 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Signin() {
-    const [disable,setDisable] = React.useState(true);
-  const handleSubmit = (event) => {
+  let navigate = useNavigate();
+  const [disable, setDisable] = React.useState(true);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    
+    const  email = data.get('email');
+    const  password = data.get('password');
+   
+    const response = await fetch(`${process.env.REACT_APP_LINK}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email: email, password: password })
     });
+    // eslint-disable-next-line
+    const json = await response.json();
+    // console.log("LoggedIn",json);
+    if (json) {
+      localStorage.setItem('token', json.authToken)
+      navigate("/")
+      // props.showAlert("Logged In Successfully", "success")
+    }
+    else {
+      // props.showAlert("Invalid credentials", "danger")
+    }
+
   };
 
   return (
@@ -61,7 +83,7 @@ export default function Signin() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -87,7 +109,7 @@ export default function Signin() {
                 <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I Confirm above details are valid to the best of my knowledge."
-                  onChange={(event) =>{setDisable(disable==true?false:true)}}
+                  onChange={(event) => { setDisable(disable === true ? false : true) }}
                 />
               </Grid>
             </Grid>
@@ -96,14 +118,14 @@ export default function Signin() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={disable=== true?true:false}
+              disabled={disable === true ? true : false}
             >
               Sign In
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/signup" variant="body2" style={{'cursor' : 'pointer'}}>
-                Don't have an account? Sign Up
+                <Link href="/signup" variant="body2" style={{ 'cursor': 'pointer' }}>
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>

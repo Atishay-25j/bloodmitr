@@ -18,3 +18,7 @@
     text-decoration: none;
     color: #fff;
 }
+.ACTIVE{
+    color: rgb(106, 182, 229);
+    text-shadow: 2px 2px 12px rgb(57, 169, 218);
+}

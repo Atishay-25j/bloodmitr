@@ -2,7 +2,33 @@ import React from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import logo from './bloodmitr.png'
+import { useNavigate } from "react-router-dom";
 function Navbar() {
+    let navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login')
+    }
+    const handleDonor = () => {
+        if (localStorage.getItem('token')) {
+            console.log("In notes");
+            navigate('/donate')
+            // eslint-disable-next-line
+        }
+        else {
+            console.log('Inlogin');
+            navigate('/login');
+        }
+    }
+    const handleRecip = ()=>{
+        if (localStorage.getItem('token')) {
+            navigate('/require')
+            // eslint-disable-next-line
+        }
+        else {
+            navigate('/login');
+        }
+    }
     return (
         <div>
             <nav className="navbar navbar-expand-lg fixed-top ">
@@ -30,15 +56,11 @@ function Navbar() {
                                     VOLUNTEERS
                                 </Link>
                             </li>
-                            <li className="nav-item">
-                                <Link to="/donate" className="nav-link navITEM">
-                                    DONATE
-                                </Link>
+                            <li className="nav-item ">
+                                <button className="nav-link navITEM" onClick={handleDonor}>DONATE</button>
                             </li>
                             <li className="nav-item">
-                                <Link to="/require" className="nav-link navITEM">
-                                    FIND A DONOR
-                                </Link>
+                            <button className="nav-link navITEM" onClick={handleRecip}>FIND A DONOR</button>
                             </li>
                             <li className="nav-item">
                                 <Link to="/explore" className="nav-link navITEM">
@@ -58,7 +80,10 @@ function Navbar() {
                                 >REQUESTS</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link navITEM" to="/login">LOGIN</Link>
+                                {!localStorage.getItem('token') ? <Link className="nav-link navITEM" to="/login">LOGIN</Link> :
+                                    <button className="nav-link navITEM" onClick={handleLogout}>LOGOUT</button>
+                                }
+
                             </li>
                         </ul>
                     </div>
